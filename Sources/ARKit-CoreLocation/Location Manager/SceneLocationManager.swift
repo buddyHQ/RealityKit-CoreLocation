@@ -22,7 +22,7 @@ public enum LocationEstimateMethod {
     case mostRelevantEstimate
 }
 
-protocol SceneLocationManagerDelegate: class {
+protocol SceneLocationManagerDelegate: AnyObject {
     var scenePosition: SCNVector3? { get }
 
     func confirmLocationOfDistantLocationNodes()

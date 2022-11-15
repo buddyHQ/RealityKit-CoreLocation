@@ -187,19 +187,18 @@ open class SceneLocationView: ARSCNView {
 
 @available(iOS 11.0, *)
 public extension SceneLocationView {
-
     func run() {
         switch arTrackingType {
         case .worldTracking:
             let configuration = ARWorldTrackingConfiguration()
             configuration.planeDetection = .horizontal
             configuration.worldAlignment = orientToTrueNorth ? .gravityAndHeading : .gravity
-            session.run(configuration)
+            session.run(configuration, options: [.resetTracking,.removeExistingAnchors,.stopTrackedRaycasts])
 
         case .orientationTracking:
-            let configuration = AROrientationTrackingConfiguration()
+            let configuration = ARWorldTrackingConfiguration()
             configuration.worldAlignment = orientToTrueNorth ? .gravityAndHeading : .gravity
-            session.run(configuration)
+            session.run(configuration, options: [.resetTracking,.removeExistingAnchors,.stopTrackedRaycasts])
         }
         sceneLocationManager.run()
     }

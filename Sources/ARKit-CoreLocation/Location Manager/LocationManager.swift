@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-protocol LocationManagerDelegate: class {
+protocol LocationManagerDelegate: AnyObject {
     func locationManagerDidUpdateLocation(_ locationManager: LocationManager,
                                           location: CLLocation)
     func locationManagerDidUpdateHeading(_ locationManager: LocationManager,
