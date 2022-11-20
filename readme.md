@@ -1,4 +1,4 @@
-![ARKit + CoreLocation](https://github.com/ProjectDent/ARKit-CoreLocation/blob/master/arkit.png)
+![RealityKit + CoreLocation](https://user-images.githubusercontent.com/69051988/202890913-4721003e-827b-4306-a334-f1deb01dd4cb.png)
 
 <p align="center">
     <a href="https://travis-ci.org/ProjectDent/ARKit-CoreLocation">
