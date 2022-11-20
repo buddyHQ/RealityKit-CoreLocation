@@ -1,7 +1,7 @@
 ![RealityKit + CoreLocation](https://user-images.githubusercontent.com/69051988/202890913-4721003e-827b-4306-a334-f1deb01dd4cb.png)
 
 
-Note: this fork extends the library [ARKit-CoreLocation](https://github.com/ProjectDent/ARKit-CoreLocation) that is originally written in `SceneKit` to `RealityKit`
+Note: This fork extends the library [ARKit-CoreLocation](https://github.com/ProjectDent/ARKit-CoreLocation) that is originally written in `SceneKit` to `RealityKit`
 
 <p align="center">
     <a href="https://travis-ci.org/ProjectDent/ARKit-CoreLocation">
