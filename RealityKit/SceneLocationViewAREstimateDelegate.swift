@@ -32,7 +32,7 @@ public protocol SceneLocationARViewDelegate: AnyObject {
 
     func didSetupSceneEntity(sceneLocationView: SceneLocationARView, sceneEntity: Entity)
 
-    func didUpdateLocationAndScaleOfLocationEntity(sceneLocationView: SceneLocationView, locationEntity: LocationEntity)
+    func didUpdateLocationAndScaleOfLocationEntity(sceneLocationView: SceneLocationARView, locationEntity: LocationEntity)
 }
 
 /// Subset of delegate methods from ARSCNViewDelegate to be notified on tracking status changes

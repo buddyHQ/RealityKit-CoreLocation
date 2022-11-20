@@ -13,9 +13,11 @@
 		1E1379D2CF8C3FF935F8D88B2E22C061 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1C87DD65575F3BFF2A2EB472E5344D /* Foundation.framework */; };
 		1F01A3251E6E90FE3B5C5BEACCDF03A9 /* Pods-ARKit+CoreLocation-ARCLTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8204959B6380448255D836E41AF1C247 /* Pods-ARKit+CoreLocation-ARCLTests-dummy.m */; };
 		2951EDCC419D1405F8878108B4D94268 /* Pods-ARKit+CoreLocation-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D783782ED595AF0A972373CC94DFA29 /* Pods-ARKit+CoreLocation-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34EDDC3284C8B060ADD0BABE1060E75B /* SceneLocationView+ARSCNViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735479C620D5F49F39DDB873F7BAF391 /* SceneLocationView+ARSCNViewDelegate.swift */; };
 		451CB5B64FF87551065B2D11BBA631EB /* LocationAnnotationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DC2A6A827498C9727391EF7D6CD9D4 /* LocationAnnotationNode.swift */; };
 		462B4A6FEC5638E4FF676C20D4D8206C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9198131727667F5A36AEE40099328680 /* UIKit.framework */; };
+		540EEAE8292A4FEC008AB802 /* SceneLocationARView+ARSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540EEAE7292A4FEC008AB802 /* SceneLocationARView+ARSessionDelegate.swift */; };
+		540EEAEA292A52C8008AB802 /* SceneLocationView+ARSCNViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540EEAE9292A52C8008AB802 /* SceneLocationView+ARSCNViewDelegate.swift */; };
+		540EEAEC292A752C008AB802 /* PolyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540EEAEB292A752C008AB802 /* PolyLineEntity.swift */; };
 		543FDDCE2928FE0E000CAF78 /* SceneLocationARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FDDCD2928FE0E000CAF78 /* SceneLocationARView.swift */; };
 		543FDDD229291735000CAF78 /* LocationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FDDD129291735000CAF78 /* LocationEntity.swift */; };
 		543FDDD7292918AF000CAF78 /* SceneLocationARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FDDD6292918AF000CAF78 /* SceneLocationARManager.swift */; };
@@ -110,6 +112,9 @@
 		4BA84E447BC7505750E4AC5000CE0FC3 /* SceneLocationViewEstimateDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SceneLocationViewEstimateDelegate.swift; path = "Sources/ARKit-CoreLocation/SceneLocationViewEstimateDelegate.swift"; sourceTree = "<group>"; };
 		4C4696BFA758F837B3E634728CAB0FEB /* Pods-ARKit+CoreLocation-ARCLTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ARKit+CoreLocation-ARCLTests.debug.xcconfig"; sourceTree = "<group>"; };
 		50C131F46846890FB36784D56D641E29 /* FloatingPoint+Radians.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "FloatingPoint+Radians.swift"; sourceTree = "<group>"; };
+		540EEAE7292A4FEC008AB802 /* SceneLocationARView+ARSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneLocationARView+ARSessionDelegate.swift"; sourceTree = "<group>"; };
+		540EEAE9292A52C8008AB802 /* SceneLocationView+ARSCNViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneLocationView+ARSCNViewDelegate.swift"; sourceTree = "<group>"; };
+		540EEAEB292A752C008AB802 /* PolyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolyLineEntity.swift; sourceTree = "<group>"; };
 		543FDDCD2928FE0E000CAF78 /* SceneLocationARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLocationARView.swift; sourceTree = "<group>"; };
 		543FDDD129291735000CAF78 /* LocationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEntity.swift; sourceTree = "<group>"; };
 		543FDDD6292918AF000CAF78 /* SceneLocationARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLocationARManager.swift; sourceTree = "<group>"; };
@@ -132,7 +137,6 @@
 		6F01E68A68FA4466C6E72691EAD1B315 /* Pods-ARKit+CoreLocation.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-ARKit+CoreLocation.modulemap"; sourceTree = "<group>"; };
 		71F1A3B36B31E4FFE075C3E7D259F024 /* Pods-Node Demos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Node Demos.release.xcconfig"; sourceTree = "<group>"; };
 		71FAC7BB4A2B0BCDE754BC763721B9EA /* Pods-Node Demos-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Node Demos-acknowledgements.plist"; sourceTree = "<group>"; };
-		735479C620D5F49F39DDB873F7BAF391 /* SceneLocationView+ARSCNViewDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "SceneLocationView+ARSCNViewDelegate.swift"; path = "Sources/ARKit-CoreLocation/SceneLocationView+ARSCNViewDelegate.swift"; sourceTree = "<group>"; };
 		738DEF70BEEA2F3527D37A0B2025D9F7 /* Pods_ARKit_CoreLocation_ARCLTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARKit_CoreLocation_ARCLTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79A20AA5F6C70AEFA7C9572FD57CF93A /* ARCL-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ARCL-prefix.pch"; sourceTree = "<group>"; };
 		81507576BBEA8A2FD7EDBE26AC330556 /* ARCL.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = ARCL.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -287,6 +291,7 @@
 			children = (
 				543FDDCD2928FE0E000CAF78 /* SceneLocationARView.swift */,
 				543FDDE329294F5F000CAF78 /* SceneLocationViewAREstimateDelegate.swift */,
+				540EEAE7292A4FEC008AB802 /* SceneLocationARView+ARSessionDelegate.swift */,
 				543FDDD42929184F000CAF78 /* Entities */,
 				543FDDD52929188C000CAF78 /* LocationManager */,
 				543FDDDA29291B07000CAF78 /* Extensions */,
@@ -298,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				543FDDD129291735000CAF78 /* LocationEntity.swift */,
+				540EEAEB292A752C008AB802 /* PolyLineEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -340,7 +346,7 @@
 				543FDDD3292917EF000CAF78 /* RealityKit */,
 				F2531731D3BAAAE2EC2572CF9A31B40D /* ARKit_CoreLocation.swift */,
 				4908963D2B1EBF5A16D4FB7BD208AA9A /* SceneLocationView.swift */,
-				735479C620D5F49F39DDB873F7BAF391 /* SceneLocationView+ARSCNViewDelegate.swift */,
+				540EEAE9292A52C8008AB802 /* SceneLocationView+ARSCNViewDelegate.swift */,
 				4BA84E447BC7505750E4AC5000CE0FC3 /* SceneLocationViewEstimateDelegate.swift */,
 				64B6B1EE5FBA35321386751D1BD7E555 /* Extensions */,
 				ACA927D588B8CC1357816B597F4A7F55 /* Location Manager */,
@@ -729,8 +735,10 @@
 				543FDDCE2928FE0E000CAF78 /* SceneLocationARView.swift in Sources */,
 				543FDDDC29291B21000CAF78 /* CGPoint+Extensions.swift in Sources */,
 				543FDDD929291A71000CAF78 /* SceneLocationAREstimate.swift in Sources */,
+				540EEAEC292A752C008AB802 /* PolyLineEntity.swift in Sources */,
 				929B72061F47012B5B68EAD27ABB9D8C /* CLLocation+Extensions.swift in Sources */,
 				DC1AC8CF9215B153DFE4693FF8F882D4 /* FloatingPoint+Radians.swift in Sources */,
+				540EEAE8292A4FEC008AB802 /* SceneLocationARView+ARSessionDelegate.swift in Sources */,
 				451CB5B64FF87551065B2D11BBA631EB /* LocationAnnotationNode.swift in Sources */,
 				586773CFB2493731A5B368153B32959B /* LocationManager.swift in Sources */,
 				6B576E762837AB25CB0803187822FF74 /* LocationNode.swift in Sources */,
@@ -738,10 +746,10 @@
 				A8E22072AFAA1C7CAD9E9A973C195B92 /* PolylineNode.swift in Sources */,
 				543FDDD7292918AF000CAF78 /* SceneLocationARManager.swift in Sources */,
 				C1A60CC248ACB113DFCC7AEB64D31887 /* ScalingScheme.swift in Sources */,
+				540EEAEA292A52C8008AB802 /* SceneLocationView+ARSCNViewDelegate.swift in Sources */,
 				7A3BA3746F6A2D39A4ADD8379BFA4A5B /* SceneLocationEstimate+Extensions.swift in Sources */,
 				CC24E1BA5E5D415A242195A809AF06F1 /* SceneLocationEstimate.swift in Sources */,
 				0A47731094BBA76F99C269726A729E38 /* SceneLocationManager.swift in Sources */,
-				34EDDC3284C8B060ADD0BABE1060E75B /* SceneLocationView+ARSCNViewDelegate.swift in Sources */,
 				DCA0498118B0512270ED95B822CA42C2 /* SceneLocationView.swift in Sources */,
 				D25F269F4C5B3C529AE8792BD85A7943 /* SceneLocationViewEstimateDelegate.swift in Sources */,
 				543FDDD229291735000CAF78 /* LocationEntity.swift in Sources */,

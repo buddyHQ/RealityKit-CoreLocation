@@ -14,8 +14,8 @@ import MapKit
 protocol SceneLocationARManagerDelegate: AnyObject {
     var scenePosition: SIMD3<Float>? { get }
 
-    func confirmLocationOfDistantLocationNodes()
-    func updatePositionAndScaleOfLocationNodes()
+    func confirmLocationOfDistantLocationEntitys()
+    func updatePositionAndScaleOfLocationEntitys()
 
     func didAddSceneLocationEstimate(position: SIMD3<Float>, location: CLLocation)
     func didRemoveSceneLocationEstimate(position: SIMD3<Float>, location: CLLocation)

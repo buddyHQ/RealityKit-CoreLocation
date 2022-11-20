@@ -42,7 +42,7 @@ open class SceneLocationARView: ARView {
     
     public weak var locationViewDelegate: SceneLocationARViewDelegate?
     public weak var locationEstimateDelegate: SceneLocationARViewEstimateDelegate?
-    public weak var locationNodeTouchDelegate: LNTouchARDelegate?
+    public weak var locationEntityTouchDelegate: LNTouchARDelegate?
     public weak var sceneTrackingDelegate: SceneTrackingARDelegate?
     
     internal var pointOfView : SIMD3<Float> {
@@ -58,6 +58,7 @@ open class SceneLocationARView: ARView {
     /// Delegate issue when assigned to self (no location nodes render).   If the user
     /// tries to set the delegate, perform an assertionFailure and tell them to set the `arViewDelegate` instead.
     open var delegate: ARSessionDelegate?
+    open var arSessionDelegate : ARSessionDelegate?
     
     /// The method to use for determining locations.
     /// Not advisable to change this as the scene is ongoing.
@@ -72,7 +73,7 @@ open class SceneLocationARView: ARView {
         }
     }
     
-    /// When set to true, displays an axes node at the start of the scene
+    /// When set to true, displays an axes entity at the start of the scene
     public var showAxesNode = false
     
     public internal(set) var sceneEntity: AnchorEntity? {
@@ -113,7 +114,7 @@ open class SceneLocationARView: ARView {
     }
     
     public internal(set) var locationEntities = [LocationEntity]()
-    public internal(set) var polylineNodes = [PolylineNode]()
+    public internal(set) var polylineNodes = [PolylineEntity]()
     public internal(set) var arTrackingType: ARTrackingType = .worldTracking
     
     // MARK: Internal desclarations
@@ -161,23 +162,23 @@ open class SceneLocationARView: ARView {
         self.sceneEntity?.position.y = .zero
     }
     
-    func confirmLocationOfLocationEntity(_ locationNode: LocationEntity) {
-        locationNode.location = locationOfLocationEntity(locationNode)
-        locationViewDelegate?.didConfirmLocationOfNode(sceneLocationView: self, node: locationNode)
+    func confirmLocationOfLocationEntity(_ locationEntity: LocationEntity) {
+        locationEntity.location = locationOfLocationEntity(locationEntity)
+        locationViewDelegate?.didConfirmLocationOfEntity(sceneLocationView: self, entity: locationEntity)
     }
     
-    /// Gives the best estimate of the location of a node
-    public func locationOfLocationEntity(_ locationNode: LocationEntity) -> CLLocation {
-        if locationNode.locationConfirmed || locationEstimateMethod == .coreLocationDataOnly {
-            return locationNode.location!
+    /// Gives the best estimate of the location of a entity
+    public func locationOfLocationEntity(_ locationEntity: LocationEntity) -> CLLocation {
+        if locationEntity.locationConfirmed || locationEstimateMethod == .coreLocationDataOnly {
+            return locationEntity.location!
         }
         
         if let bestLocationEstimate = sceneLocationManager.bestLocationEstimate,
-           locationNode.location == nil
-            || bestLocationEstimate.location.horizontalAccuracy < locationNode.location!.horizontalAccuracy {
-            return bestLocationEstimate.translatedLocation(to: locationNode.position)
+           locationEntity.location == nil
+            || bestLocationEstimate.location.horizontalAccuracy < locationEntity.location!.horizontalAccuracy {
+            return bestLocationEstimate.translatedLocation(to: locationEntity.position)
         } else {
-            return locationNode.location!
+            return locationEntity.location!
         }
     }
 }
@@ -228,8 +229,8 @@ public extension SceneLocationARView {
     
     // MARK: LocationEntitys
     
-    /// Upon being added, a node's location, locationConfirmed and position may be modified and should not be changed externally.
-    /// Silently fails and returns without adding the node to the scene if any of `currentScenePosition`,
+    /// Upon being added, a entity's location, locationConfirmed and position may be modified and should not be changed externally.
+    /// Silently fails and returns without adding the entity to the scene if any of `currentScenePosition`,
     /// `sceneLocationManager.currentLocation`, or `sceneNode` is `nil`.
     func addLocationEntityForCurrentPosition(locationEntity: LocationEntity) {
         guard let currentPosition = currentScenePosition,
@@ -243,15 +244,15 @@ public extension SceneLocationARView {
         sceneEntity.addChild(locationEntity)
     }
     
-    /// Each node's addition to the scene can silently fail; See `addLocationEntityForCurrentPosition(locationNode:)`.
+    /// Each entity's addition to the scene can silently fail; See `addLocationEntityForCurrentPosition(locationEntity:)`.
     ///
     /// Why would we want to add multiple nodes at the current position?
     func addLocationEntitysForCurrentPosition(locationEntities: [LocationEntity]) {
         locationEntities.forEach { addLocationEntityForCurrentPosition(locationEntity: $0) }
     }
     
-    /// Silently fails and returns without adding the node unless`location` is not `nil` and `locationConfirmed` is `true`.
-    /// Upon being added, a node's position will be modified internally and should not be changed externally.
+    /// Silently fails and returns without adding the entity unless`location` is not `nil` and `locationConfirmed` is `true`.
+    /// Upon being added, a entity's position will be modified internally and should not be changed externally.
     /// `location` will not be modified, but taken as accurate.
     func addLocationEntityWithConfirmedLocation(locationEntity: LocationEntity) {
         if locationEntity.location == nil || locationEntity.locationConfirmed == false {
@@ -284,14 +285,14 @@ public extension SceneLocationARView {
             return
         }
         
-        if let touchedNode = firstHitTest.node as? AnnotationNode {
-            self.locationNodeTouchDelegate?.annotationNodeTouched(node: touchedNode)
-        } else if let locationNode = firstHitTest.node.parent as? LocationEntity {
-            self.locationNodeTouchDelegate?.locationNodeTouched(node: locationNode)
+        if let touchedNode = firstHitTest.entity as? AnnotationEntity {
+            self.locationEntityTouchDelegate?.annotationNodeTouched(entity: touchedNode)
+        } else if let locationEntity = firstHitTest.entity.parent as? LocationEntity {
+            self.locationEntityTouchDelegate?.locationEntityTouched(entity: locationEntity)
         }
     }
     
-    /// Each node's addition to the scene can silently fail; See `addLocationEntityWithConfirmedLocation(locationNode:)`.
+    /// Each entity's addition to the scene can silently fail; See `addLocationEntityWithConfirmedLocation(locationEntity:)`.
     func addLocationEntitysWithConfirmedLocation(locationEntities: [LocationEntity]) {
         locationEntities.forEach { addLocationEntityWithConfirmedLocation(locationEntity: $0) }
     }
@@ -304,7 +305,7 @@ public extension SceneLocationARView {
         }
     }
     
-    /// Determine if scene contains a node with the specified tag
+    /// Determine if scene contains a entity with the specified tag
     ///
     /// - Parameter tag: tag text
     /// - Returns: true if a LocationEntity with the tag exists; false otherwise
@@ -375,10 +376,10 @@ public extension SceneLocationARView {
         polylineNodes.append(contentsOf: polyNodes)
         polyNodes.forEach {
             $0.locationEntities.forEach {
-                let locationNodeLocation = self.locationOfLocationEntity($0)
+                let locationEntityLocation = self.locationOfLocationEntity($0)
                 $0.updatePositionAndScale(setup: true,
                                           scenePosition: currentScenePosition,
-                                          locationNodeLocation: locationNodeLocation,
+                                          locationEntityLocation: locationEntityLocation,
                                           locationManager: sceneLocationManager,
                                           onCompletion: {})
                 sceneEntity?.addChild($0)
@@ -415,10 +416,10 @@ public extension SceneLocationARView {
         polylineNodes.forEach {
             $0.locationEntities.forEach {
                 
-                let locationNodeLocation = self.locationOfLocationEntity($0)
+                let locationEntityLocation = self.locationOfLocationEntity($0)
                 $0.updatePositionAndScale(setup: true,
                                           scenePosition: currentScenePosition,
-                                          locationNodeLocation: locationNodeLocation,
+                                          locationEntityLocation: locationEntityLocation,
                                           locationManager: sceneLocationManager,
                                           onCompletion: {})
                 
@@ -445,9 +446,9 @@ extension SceneLocationARView: SceneLocationARManagerDelegate {
         
         locationEntities.filter { !$0.locationConfirmed }.forEach {
             let currentPoint = CGPoint.pointWithVector(vector: currentPosition)
-            let locationNodePoint = CGPoint.pointWithVector(vector: $0.position)
+            let locationEntityPoint = CGPoint.pointWithVector(vector: $0.position)
             
-            if !currentPoint.radiusContainsPoint(radius: CGFloat(SceneLocationARView.sceneLimit), point: locationNodePoint) {
+            if !currentPoint.radiusContainsPoint(radius: CGFloat(SceneLocationARView.sceneLimit), point: locationEntityPoint) {
                 confirmLocationOfLocationEntity($0)
             }
         }
@@ -455,19 +456,19 @@ extension SceneLocationARView: SceneLocationARManagerDelegate {
     
     /// Updates the position and scale of the `polylineNodes` and the `locationEntities`.
     func updatePositionAndScaleOfLocationEntitys() {
-        polylineNodes.filter { $0.continuallyUpdatePositionAndScale }.forEach { node in
-            node.locationEntities.forEach { node in
-                let locationNodeLocation = self.locationOfLocationEntity(node)
-                node.updatePositionAndScale(
+        polylineNodes.filter { $0.continuallyUpdatePositionAndScale }.forEach { entity in
+            entity.locationEntities.forEach { entity in
+                let locationEntityLocation = self.locationOfLocationEntity(entity)
+                entity.updatePositionAndScale(
                     setup: false,
                     scenePosition: currentScenePosition,
-                    locationNodeLocation: locationNodeLocation,
+                    locationEntityLocation: locationEntityLocation,
                     locationManager: sceneLocationManager) {
                         self.locationViewDelegate?.didUpdateLocationAndScaleOfLocationEntity(
-                            sceneLocationView: self, locationNode: node)
+                            sceneLocationView: self, locationEntity: entity)
                     } // updatePositionAndScale
-            } // foreach Location node
-        } // foreach Polyline node
+            } // foreach Location entity
+        } // foreach Polyline entity
         
         locationEntities.filter { $0.continuallyUpdatePositionAndScale }.forEach { entity in
             let locationEntityLocation = locationOfLocationEntity(entity)
