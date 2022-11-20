@@ -8,6 +8,7 @@
 
 import Foundation
 import ARKit
+import RealityKit
 import CoreLocation
 import MapKit
 
@@ -45,7 +46,7 @@ public protocol SceneLocationViewDelegate: AnyObject {
     func didUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode)
 }
 
-/// Subset of delegate methods from ARSCNViewDelegate to be notified on tracking status changes
+// Subset of delegate methods from ARSCNViewDelegate to be notified on tracking status changes
 @available(iOS 11.0, *)
 public protocol SceneTrackingDelegate: AnyObject {
 
