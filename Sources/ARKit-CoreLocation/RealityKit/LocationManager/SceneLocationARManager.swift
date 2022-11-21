@@ -68,8 +68,8 @@ public final class SceneLocationARManager {
     func updateLocationData() {
         removeOldLocationEstimates()
 
-        sceneLocationDelegate?.confirmLocationOfDistantLocationNodes()
-        sceneLocationDelegate?.updatePositionAndScaleOfLocationNodes()
+        sceneLocationDelegate?.confirmLocationOfDistantLocationEntitys()
+        sceneLocationDelegate?.updatePositionAndScaleOfLocationEntitys()
     }
 
     ///Adds a scene location estimate based on current time, camera position and location from location manager

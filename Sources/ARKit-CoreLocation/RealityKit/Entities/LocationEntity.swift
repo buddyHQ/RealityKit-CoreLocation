@@ -14,12 +14,14 @@ open class AnnotationEntity: Entity, HasModel {
     public var view: UIView?
     public var image: UIImage?
     public var layer: CALayer?
+    public var textImage : String?
 
-    public init(view: UIView?, image: UIImage?, layer: CALayer? = nil) {
+    public init(view: UIView?, image: UIImage?, layer: CALayer? = nil, textImage: String? = nil, mesh : MeshResource? = nil) {
         super.init()
         self.view = view
         self.image = image
         self.layer = layer
+        self.textImage = textImage
     }
     
     required public init() {
@@ -149,7 +151,7 @@ open class LocationEntity: Entity, HasModel {
 
     /// See `LocationAnnotationNode`'s override of this function. Because it doesn't invoke `super`'s version, any changes
     /// made in this file must be repeated in `LocationAnnotationNode`.
-    func updatePositionAndScale(setup: Bool = false, scenePosition: SIMD3<Float>?, locationNodeLocation nodeLocation: CLLocation,
+    func updatePositionAndScale(setup: Bool = false, scenePosition: SIMD3<Float>?, locationEntityLocation nodeLocation: CLLocation,
                                 locationManager: SceneLocationARManager, onCompletion: (() -> Void)) {
         guard let position = scenePosition, locationManager.currentLocation != nil else {
             return
@@ -161,7 +163,8 @@ open class LocationEntity: Entity, HasModel {
         let distance = self.location(locationManager.bestLocationEstimate).distance(from:
             locationManager.currentLocation ?? nodeLocation)
 
-        childNodes.first?.renderingOrder = renderingOrder(fromDistance: distance)
+        // https://stackoverflow.com/questions/58355898/how-to-set-entity-in-front-of-screen-with-reality-kit
+        // childNodes.first?.renderingOrder = renderingOrder(fromDistance: distance)
 
         _ = self.adjustedDistance(setup: setup, position: position,
                                   locationNodeLocation: nodeLocation, locationManager: locationManager)

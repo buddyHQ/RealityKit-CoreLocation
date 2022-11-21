@@ -983,8 +983,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = CN8A6854MM;
 				INFOPLIST_FILE = "ARKit+CoreLocation/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.maaap.ProjectDent.ARKit-jijhkfghjkljhkgjfh";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.buddy.realitykit-corelocation";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -998,8 +999,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = CN8A6854MM;
 				INFOPLIST_FILE = "ARKit+CoreLocation/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.maaap.ProjectDent.ARKit-jijhkfghjkljhkgjfh";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.buddy.realitykit-corelocation";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -114,7 +114,7 @@ open class SceneLocationARView: ARView {
     }
     
     public internal(set) var locationEntities = [LocationEntity]()
-    public internal(set) var polylineNodes = [PolylineEntity]()
+    public internal(set) var polylineEntities = [PolylineEntity]()
     public internal(set) var arTrackingType: ARTrackingType = .worldTracking
     
     // MARK: Internal desclarations
@@ -130,7 +130,7 @@ open class SceneLocationARView: ARView {
     ///   - frame: The CGRect for the frame (defaults to .zero).
     ///   - options: The rendering options for the `SCNView`.
     public convenience init(trackingType: ARTrackingType = .worldTracking, frame: CGRect = .zero, options: [String: Any]? = nil) {
-        self.init(frame: frame, options: options)
+        self.init(frame: frame)
         self.arTrackingType = trackingType
     }
     
@@ -141,10 +141,10 @@ open class SceneLocationARView: ARView {
     
     @MainActor public required dynamic init(frame frameRect: CGRect) {
         fatalError("init(frame:) has not been implemented")
-        finishInitialization()
 
     }
     
+    // https://stackoverflow.com/questions/58355898/how-to-set-entity-in-front-of-screen-with-reality-kit
     private func finishInitialization() {
         sceneLocationManager.sceneLocationDelegate = self
         
@@ -262,7 +262,7 @@ public extension SceneLocationARView {
         let locationEntityLocation = locationOfLocationEntity(locationEntity)
         
         locationEntity.updatePositionAndScale(setup: true,
-                                              scenePosition: currentScenePosition, locationNodeLocation: locationEntityLocation,
+                                              scenePosition: currentScenePosition, locationEntityLocation: locationEntityLocation,
                                             locationManager: sceneLocationManager) {
             self.locationViewDelegate?
                 .didUpdateLocationAndScaleOfLocationEntity(sceneLocationARView: self,
@@ -274,7 +274,8 @@ public extension SceneLocationARView {
     }
     
     @objc func sceneLocationViewTouched(sender: UITapGestureRecognizer) {
-        guard let touchedView = sender.view as? SCNView else {
+        guard let touchedView = sender.view as? ARView else {
+            print("DEBUG: Error when initalizing ARView")
             return
         }
         
@@ -285,8 +286,8 @@ public extension SceneLocationARView {
             return
         }
         
-        if let touchedNode = firstHitTest.entity as? AnnotationEntity {
-            self.locationEntityTouchDelegate?.annotationNodeTouched(entity: touchedNode)
+        if let touchedEntity = firstHitTest.entity as? AnnotationEntity {
+            self.locationEntityTouchDelegate?.annotationEntityTouched(entity: touchedEntity)
         } else if let locationEntity = firstHitTest.entity.parent as? LocationEntity {
             self.locationEntityTouchDelegate?.locationEntityTouched(entity: locationEntity)
         }
@@ -347,7 +348,7 @@ public extension SceneLocationARView {
     /// - Parameters:
     ///   - routes: The MKRoute of directions
     ///   - boxBuilder: A block that will customize how a box is built.
-    func addRoutes(routes: [MKRoute], boxBuilder: BoxBuilder? = nil) {
+    func addRoutes(routes: [MKRoute], boxBuilder: BoxEntityBuilder? = nil) {
         addRoutes(polylines: routes.map { AttributedType(type: $0.polyline,
                                                          attribute: $0.name) },
                   boxBuilder: boxBuilder)
@@ -362,19 +363,19 @@ public extension SceneLocationARView {
     ///   - boxBuilder: A block that will customize how a box is built.
     func addRoutes(polylines: [AttributedType<MKPolyline>],
                    Δaltitude: CLLocationDistance = -2.0,
-                   boxBuilder: BoxBuilder? = nil) {
+                   boxBuilder: BoxEntityBuilder? = nil) {
         guard let altitude = sceneLocationManager.currentLocation?.altitude else {
             return assertionFailure("we don't have an elevation")
         }
-        let polyNodes = polylines.map {
-            PolylineNode(polyline: $0.type,
+        let polyEntities = polylines.map {
+            PolylineEntity(polyline: $0.type,
                          altitude: altitude + Δaltitude,
                          tag: $0.attribute,
                          boxBuilder: boxBuilder)
         }
         
-        polylineNodes.append(contentsOf: polyNodes)
-        polyNodes.forEach {
+        polylineEntities.append(contentsOf: polyEntities)
+        polyEntities.forEach {
             $0.locationEntities.forEach {
                 let locationEntityLocation = self.locationOfLocationEntity($0)
                 $0.updatePositionAndScale(setup: true,
@@ -389,8 +390,8 @@ public extension SceneLocationARView {
     
     func removeRoutes(routes: [MKRoute]) {
         routes.forEach { route in
-            if let index = polylineNodes.firstIndex(where: { $0.polyline == route.polyline }) {
-                polylineNodes.remove(at: index)
+            if let index = polylineEntities.firstIndex(where: { $0.polyline == route.polyline }) {
+                polylineEntities.remove(at: index)
             }
         }
     }
@@ -404,16 +405,16 @@ public extension SceneLocationARView {
     /// - Parameters:
     ///   - polylines: A set of MKPolyline.
     ///   - boxBuilder: A block that will customize how a box is built.
-    func addPolylines(polylines: [MKPolyline], boxBuilder: BoxBuilder? = nil) {
+    func addPolylines(polylines: [MKPolyline], boxBuilder: BoxEntityBuilder? = nil) {
         
         guard let altitude = sceneLocationManager.currentLocation?.altitude else {
             return assertionFailure("we don't have an elevation")
         }
         polylines.forEach { (polyline) in
-            polylineNodes.append(PolylineNode(polyline: polyline, altitude: altitude - 2.0, boxBuilder: boxBuilder))
+            polylineEntities.append(PolylineEntity(polyline: polyline, altitude: altitude - 2.0, boxBuilder: boxBuilder))
         }
         
-        polylineNodes.forEach {
+        polylineEntities.forEach {
             $0.locationEntities.forEach {
                 
                 let locationEntityLocation = self.locationOfLocationEntity($0)
@@ -430,8 +431,8 @@ public extension SceneLocationARView {
     
     func removePolylines(polylines: [MKPolyline]) {
         polylines.forEach { polyline in
-            if let index = polylineNodes.firstIndex(where: { $0.polyline == polyline }) {
-                polylineNodes.remove(at: index)
+            if let index = polylineEntities.firstIndex(where: { $0.polyline == polyline }) {
+                polylineEntities.remove(at: index)
             }
         }
     }
@@ -454,9 +455,9 @@ extension SceneLocationARView: SceneLocationARManagerDelegate {
         }
     }
     
-    /// Updates the position and scale of the `polylineNodes` and the `locationEntities`.
+    /// Updates the position and scale of the `polylineEntities` and the `locationEntities`.
     func updatePositionAndScaleOfLocationEntitys() {
-        polylineNodes.filter { $0.continuallyUpdatePositionAndScale }.forEach { entity in
+        polylineEntities.filter { $0.continuallyUpdatePositionAndScale }.forEach { entity in
             entity.locationEntities.forEach { entity in
                 let locationEntityLocation = self.locationOfLocationEntity(entity)
                 entity.updatePositionAndScale(
@@ -477,7 +478,7 @@ extension SceneLocationARView: SceneLocationARManagerDelegate {
                 locationEntityLocation: locationEntityLocation,
                 locationManager: sceneLocationManager) {
                     self.locationViewDelegate?.didUpdateLocationAndScaleOfLocationEntity(
-                        sceneLocationView: self, locationEntity: locationEntityLocation)
+                        sceneLocationView: self, locationEntity: entity)
                 }
         }
     }

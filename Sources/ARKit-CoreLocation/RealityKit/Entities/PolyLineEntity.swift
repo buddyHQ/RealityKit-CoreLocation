@@ -15,7 +15,7 @@ public typealias BoxEntityBuilder = (_ distance: CGFloat) -> ModelEntity
 /// A Entity that is used to show directions in AR-CL.
 @available(iOS 13.0, *)
 public class PolylineEntity: LocationEntity {
-    public private(set) var locationEntitys = [LocationEntity]()
+    public private(set) var locationEntities = [LocationEntity]()
 
     public let polyline: MKPolyline
     public let altitude: CLLocationDistance
@@ -84,18 +84,17 @@ private extension PolylineEntity {
             let distance = currentLocation.distance(from: nextLocation)
 
             let box = boxBuilder(CGFloat(distance))
-            let boxEntity = SCNNode(geometry: box)
-            boxEntity.removeFlicker()
-
+            // MARK: RealityKit Flickering
+            
             let bearing = -currentLocation.bearing(between: nextLocation)
 
             // Orient the line to point from currentLoction to nextLocation
-            boxEntity.eulerAngles.y = Float(bearing).degreesToRadians
+            box.transform = Transform(pitch: 0, yaw: Float(bearing).degreesToRadians, roll: 0)
 
             let locationEntity = LocationEntity(location: midLocation, tag: tag)
-            locationEntity.addChild(boxEntity)
+            locationEntity.addChild(box)
 
-            locationEntitys.append(locationEntity)
+            locationEntities.append(locationEntity)
         }
     }
 
