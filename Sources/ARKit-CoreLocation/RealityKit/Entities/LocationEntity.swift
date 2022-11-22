@@ -16,7 +16,7 @@ open class AnnotationEntity: Entity, HasModel {
     public var layer: CALayer?
     public var textImage : String?
 
-    public init(view: UIView?, image: UIImage?, layer: CALayer? = nil, textImage: String? = nil, mesh : MeshResource? = nil) {
+    public init(view: UIView?, image: UIImage?, layer: CALayer? = nil, textImage: String? = nil) {
         super.init()
         self.view = view
         self.image = image
@@ -104,7 +104,7 @@ open class LocationEntity: Entity, HasModel {
         }
     }
 
-    internal func adjustedDistance(setup: Bool, position: SIMD3<Float>, locationNodeLocation: CLLocation,
+    internal func adjustedDistance(setup: Bool, position: SIMD3<Float>, locationEntityLocation: CLLocation,
                                    locationManager: SceneLocationARManager) -> CLLocationDistance {
         guard let location = locationManager.currentLocation else {
             return 0.0
@@ -113,7 +113,7 @@ open class LocationEntity: Entity, HasModel {
         // Position is set to a position coordinated via the current position
         let distance = self.location(locationManager.bestLocationEstimate).distance(from: location)
 
-        var locationTranslation = location.translation(toLocation: locationNodeLocation)
+        var locationTranslation = location.translation(toLocation: locationEntityLocation)
         locationTranslation.altitudeTranslation = ignoreAltitude ? 0 : locationTranslation.altitudeTranslation
 
         let adjustedDistance: CLLocationDistance
@@ -151,7 +151,7 @@ open class LocationEntity: Entity, HasModel {
 
     /// See `LocationAnnotationNode`'s override of this function. Because it doesn't invoke `super`'s version, any changes
     /// made in this file must be repeated in `LocationAnnotationNode`.
-    func updatePositionAndScale(setup: Bool = false, scenePosition: SIMD3<Float>?, locationEntityLocation nodeLocation: CLLocation,
+    func updatePositionAndScale(setup: Bool = false, scenePosition: SIMD3<Float>?, locationEntityLocation entityLocation: CLLocation,
                                 locationManager: SceneLocationARManager, onCompletion: (() -> Void)) {
         guard let position = scenePosition, locationManager.currentLocation != nil else {
             return
@@ -161,13 +161,13 @@ open class LocationEntity: Entity, HasModel {
         SCNTransaction.animationDuration = setup ? 0.0 : 0.1
 
         let distance = self.location(locationManager.bestLocationEstimate).distance(from:
-            locationManager.currentLocation ?? nodeLocation)
+            locationManager.currentLocation ?? entityLocation)
 
         // https://stackoverflow.com/questions/58355898/how-to-set-entity-in-front-of-screen-with-reality-kit
         // childNodes.first?.renderingOrder = renderingOrder(fromDistance: distance)
 
         _ = self.adjustedDistance(setup: setup, position: position,
-                                  locationNodeLocation: nodeLocation, locationManager: locationManager)
+                                  locationEntityLocation: entityLocation, locationManager: locationManager)
 
         SCNTransaction.commit()
 

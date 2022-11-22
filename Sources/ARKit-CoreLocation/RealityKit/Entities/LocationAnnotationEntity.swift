@@ -32,19 +32,26 @@ open class LocationAnnotationEntity: LocationEntity {
                                 texture: .init(try! .load(named: "texture.png")))
         }
         else {
-            material.baseColor = try! .texture(.load(named: "buddy"))
+            material.baseColor = try! .texture(.load(named: "buddy.png"))
             material.tintColor = UIColor.white
         }
-
-        annotationEntity = AnnotationEntity(view: nil, image: image, mesh: mesh)
-        annotationEntity.geometry = plane
-        annotationEntity.removeFlicker()
+ 
+        annotationEntity = AnnotationEntity(view: nil, image: image)
+        
+        var comp : ModelComponent = annotationEntity.components[ModelComponent.self]!
+        comp.materials = [material]
+        
+        annotationEntity.components.set(comp)
+        // annotationEntity.removeFlicker()
 
         super.init(location: location)
-
-        let billboardConstraint = SCNBillboardConstraint()
-        billboardConstraint.freeAxes = SCNBillboardAxis.Y
-        constraints = [billboardConstraint]
+        
+        self.look(
+            at: self.position,
+            from: self.position,
+            upVector: [0, 1, 0],
+            relativeTo: nil
+        )
 
         addChild(annotationEntity)
     }
@@ -60,28 +67,32 @@ open class LocationAnnotationEntity: LocationEntity {
         self.init(location: location, image: view.image)
     }
 
-    public init(location: CLLocation?, layer: CALayer) {
-        let plane = SCNPlane(width: layer.bounds.size.width / 100, height: layer.bounds.size.height / 100)
-        plane.firstMaterial?.diffuse.contents = layer
-        plane.firstMaterial?.lightingModel = .constant
-
-        annotationEntity = AnnotationEntity(view: nil, image: nil, layer: layer)
-        annotationEntity.geometry = plane
-        annotationEntity.removeFlicker()
-
-        super.init(location: location)
-
-        let billboardConstraint = SCNBillboardConstraint()
-        billboardConstraint.freeAxes = SCNBillboardAxis.Y
-        constraints = [billboardConstraint]
-
-        addChild(annotationEntity)
-    }
+//    public init(location: CLLocation?, layer: CALayer) {
+//        let plane = SCNPlane(width: layer.bounds.size.width / 100, height: layer.bounds.size.height / 100)
+//        plane.firstMaterial?.diffuse.contents = layer
+//        plane.firstMaterial?.lightingModel = .constant
+//
+//        annotationEntity = AnnotationEntity(view: nil, image: nil, layer: layer)
+//        annotationEntity.geometry = plane
+//        annotationEntity.removeFlicker()
+//
+//        super.init(location: location)
+//
+//        let billboardConstraint = SCNBillboardConstraint()
+//        billboardConstraint.freeAxes = SCNBillboardAxis.Y
+//        constraints = [billboardConstraint]
+//
+//        addChild(annotationEntity)
+//    }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    required public init() {
+        fatalError("init() has not been implemented")
+    }
+    
     /// Note: we repeat code from `LocationNode`'s implementation of this function. Is this because of the use of `SCNTransaction`
     /// to wrap the changes? It's legal to nest the calls, should consider this if any more changes to
     /// `LocationNode`'s implementation are needed.
@@ -96,7 +107,7 @@ open class LocationAnnotationEntity: LocationEntity {
 
         let distance = self.location(locationManager.bestLocationEstimate).distance(from: location)
 
-        childNodes.first?.renderingOrder = renderingOrder(fromDistance: distance)
+//        childNodes.first?.renderingOrder = renderingOrder(fromDistance: distance)
 
         let adjustedDistance = self.adjustedDistance(setup: setup, position: position,
                                                      locationEntityLocation: entityLocation, locationManager: locationManager)
